@@ -1,4 +1,4 @@
-# 探波熱 Polsar port
+# 探波熱 Polsar-port
 
 專為遊戲開發團隊打造的製作管理工作區，聚焦 Feature、Asset、跨團隊交接、阻塞與里程碑風險。
 <img width="1812" height="1140" alt="polsar-port-concept" src="https://github.com/user-attachments/assets/2b15e0b9-ffe5-4edc-b17d-024bcfab2896" />
