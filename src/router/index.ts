@@ -65,6 +65,26 @@ const router = createRouter({
       },
     },
     {
+      path: "/handoffs",
+      name: "handoffs",
+      component: PlaceholderView,
+      meta: {
+        title: "跨團隊交接",
+        section: "HANDOFF",
+        description: "追蹤交付、驗收、等待與退回原因。",
+      },
+    },
+    {
+      path: "/blockers",
+      name: "blockers",
+      component: PlaceholderView,
+      meta: {
+        title: "阻塞中心",
+        section: "BLOCKERS",
+        description: "集中處理等待最久與影響最大的阻塞。",
+      },
+    },
+    {
       path: "/documents",
       name: "documents",
       component: PlaceholderView,

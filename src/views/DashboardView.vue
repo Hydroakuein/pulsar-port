@@ -2,83 +2,13 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { gsap } from "gsap";
 
+import { dashboardSnapshot } from "../mocks/dashboard";
+
 const viewRoot = ref<HTMLElement | null>(null);
 let media: ReturnType<typeof gsap.matchMedia> | undefined;
 
-const metrics = [
-  { label: "整體進度", value: "68%", detail: "本週 +4.2%", tone: "violet" },
-  { label: "進行中", value: "24", detail: "跨 6 個團隊", tone: "blue" },
-  { label: "等待審核", value: "08", detail: "2 項已逾期", tone: "amber" },
-  { label: "目前阻塞", value: "05", detail: "影響 3 個 Feature", tone: "red" },
-];
-
-const features = [
-  {
-    name: "戰鬥系統 2.0",
-    owner: "Gameplay",
-    progress: 78,
-    status: "製作中",
-    tone: "violet",
-    due: "8 月 18 日",
-  },
-  {
-    name: "深海遺跡地圖",
-    owner: "World Art",
-    progress: 64,
-    status: "整合中",
-    tone: "blue",
-    due: "8 月 22 日",
-  },
-  {
-    name: "角色：艾拉",
-    owner: "Character",
-    progress: 47,
-    status: "等待中",
-    tone: "amber",
-    due: "8 月 29 日",
-  },
-  {
-    name: "多人配對系統",
-    owner: "Online",
-    progress: 31,
-    status: "有風險",
-    tone: "red",
-    due: "9 月 05 日",
-  },
-];
-
-const handoffs = [
-  { item: "艾拉・戰鬥動畫", from: "Animation", to: "Engine", wait: "等待 3 小時", tone: "blue" },
-  { item: "遺跡環境材質", from: "Environment", to: "Lighting", wait: "等待 1 天", tone: "amber" },
-  { item: "配對流程 UI", from: "UI/UX", to: "Frontend", wait: "等待驗收", tone: "violet" },
-];
-
-const activities = [
-  {
-    initials: "YL",
-    name: "Yu-Lin",
-    action: "完成了",
-    target: "重擊動畫 V3",
-    time: "12 分鐘前",
-    color: "#e7d91b",
-  },
-  {
-    initials: "CH",
-    name: "Chia-Hao",
-    action: "提交審核",
-    target: "遺跡入口光照",
-    time: "28 分鐘前",
-    color: "#9bc54a",
-  },
-  {
-    initials: "MX",
-    name: "Mia Xu",
-    action: "更新阻塞",
-    target: "多人連線測試",
-    time: "1 小時前",
-    color: "#f3b84b",
-  },
-];
+const trendPoints = (values: number[]) =>
+  values.map((value, index) => `${index * 25},${70 - value}`).join(" ");
 
 onMounted(() => {
   media = gsap.matchMedia();
@@ -87,14 +17,36 @@ onMounted(() => {
     (context) => {
       if (context.conditions?.reduceMotion || !viewRoot.value) return;
 
-      gsap.from(viewRoot.value.querySelectorAll<HTMLElement>("[data-enter]"), {
+      const cards = viewRoot.value.querySelectorAll<HTMLElement>("[data-enter]");
+      const progressBars = viewRoot.value.querySelectorAll<HTMLElement>("[data-progress]");
+      const verticalBars = viewRoot.value.querySelectorAll<HTMLElement>("[data-progress-y]");
+
+      gsap.from(cards, {
         autoAlpha: 0,
         y: 14,
-        scale: 0.99,
-        duration: 0.58,
-        stagger: 0.05,
+        scale: 0.992,
+        duration: 0.56,
+        stagger: 0.045,
         ease: "power2.out",
         clearProps: "transform,visibility",
+      });
+
+      gsap.from(progressBars, {
+        scaleX: 0,
+        transformOrigin: "left center",
+        duration: 0.72,
+        stagger: 0.06,
+        ease: "power2.out",
+        clearProps: "transform",
+      });
+
+      gsap.from(verticalBars, {
+        scaleY: 0,
+        transformOrigin: "center bottom",
+        duration: 0.72,
+        stagger: 0.07,
+        ease: "power2.out",
+        clearProps: "transform",
       });
     },
     viewRoot.value ?? undefined,
@@ -105,117 +57,209 @@ onBeforeUnmount(() => media?.revert());
 </script>
 
 <template>
-  <div ref="viewRoot" class="dashboard-view">
-    <section class="milestone-banner" data-enter>
-      <div class="milestone-orbit" aria-hidden="true"><span></span></div>
-      <div class="milestone-copy">
-        <span class="section-kicker">下一個里程碑</span>
-        <h2>Alpha Content Lock</h2>
-        <p>還有 16 天 · 8 月 18 日</p>
-      </div>
-      <div class="milestone-progress">
-        <div class="progress-meta"><span>完成進度</span><strong>68%</strong></div>
-        <div class="progress-track"><span style="width: 68%"></span></div>
-      </div>
-      <button class="ghost-button" type="button">查看里程碑 <span>→</span></button>
-    </section>
-
-    <section class="metrics-grid" aria-label="專案指標">
-      <article v-for="metric in metrics" :key="metric.label" class="metric-card" data-enter>
-        <div class="metric-top">
-          <span>{{ metric.label }}</span>
-          <i :class="`dot dot-${metric.tone}`"></i>
-        </div>
-        <strong>{{ metric.value }}</strong>
-        <p>{{ metric.detail }}</p>
-      </article>
-    </section>
-
-    <div class="content-grid">
-      <section class="panel feature-panel" data-enter>
-        <div class="panel-header">
-          <div>
-            <span class="section-kicker">PRODUCTION</span>
-            <h2>Feature 進度</h2>
-          </div>
-          <button type="button">查看全部 →</button>
-        </div>
-        <div class="feature-list">
-          <article v-for="feature in features" :key="feature.name" class="feature-row">
-            <div class="feature-main">
-              <span :class="`feature-icon feature-icon-${feature.tone}`">◇</span>
-              <div>
-                <strong>{{ feature.name }}</strong
-                ><span>{{ feature.owner }}</span>
-              </div>
-            </div>
-            <div class="feature-progress">
-              <div>
-                <span>{{ feature.progress }}%</span><i>{{ feature.due }}</i>
-              </div>
-              <div class="progress-track compact">
-                <span :class="`bar-${feature.tone}`" :style="`width: ${feature.progress}%`"></span>
-              </div>
-            </div>
-            <span :class="`status status-${feature.tone}`">{{ feature.status }}</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel handoff-panel" data-enter>
-        <div class="panel-header">
-          <div>
-            <span class="section-kicker">HANDOFF</span>
-            <h2>等待交接</h2>
-          </div>
-          <span class="count-pill">3</span>
-        </div>
-        <div class="handoff-list">
-          <article v-for="handoff in handoffs" :key="handoff.item" class="handoff-row">
-            <div class="handoff-head">
-              <strong>{{ handoff.item }}</strong>
-              <span :class="`status status-${handoff.tone}`">{{ handoff.wait }}</span>
-            </div>
-            <div class="handoff-route">
-              <span>{{ handoff.from }}</span
-              ><i>→</i><span>{{ handoff.to }}</span>
-            </div>
-          </article>
-        </div>
-        <button class="panel-action" type="button">開啟交接中心 <span>→</span></button>
-      </section>
-
-      <section class="panel activity-panel" data-enter>
-        <div class="panel-header">
-          <div>
-            <span class="section-kicker">TEAM PULSE</span>
-            <h2>最新動態</h2>
-          </div>
-          <button type="button">全部動態 →</button>
-        </div>
-        <div class="activity-list">
-          <article v-for="activity in activities" :key="activity.target" class="activity-row">
-            <span class="activity-avatar" :style="`--avatar-color: ${activity.color}`">{{
-              activity.initials
-            }}</span>
-            <p>
-              <strong>{{ activity.name }}</strong> {{ activity.action }}
-              <b>{{ activity.target }}</b>
-              <small>{{ activity.time }}</small>
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel risk-panel" data-enter>
-        <div class="risk-icon">!</div>
+  <div ref="viewRoot" class="dashboard-bento">
+    <section class="bento-card project-focus" data-enter>
+      <header class="bento-header">
         <div>
-          <span class="section-kicker">RISK ALERT</span>
-          <h2>多人配對系統可能延誤</h2>
-          <p>後端壓力測試阻塞 2 天，預計影響 Alpha Content Lock。</p>
+          <span class="bento-kicker">PROJECT HEALTH</span>
+          <h2>專案健康狀態</h2>
         </div>
-        <button type="button">查看阻塞</button>
-      </section>
-    </div>
+        <button class="mini-action" type="button" aria-label="開啟專案詳情">
+          <span class="material-symbols-rounded">open_in_new</span>
+        </button>
+      </header>
+
+      <div class="focus-heading">
+        <div>
+          <span class="status-lozenge">ALPHA</span>
+          <h3>{{ dashboardSnapshot.milestone.name }}</h3>
+          <p>{{ dashboardSnapshot.milestone.dueLabel }}</p>
+        </div>
+        <div class="confidence-chip">
+          <span></span>
+          {{ dashboardSnapshot.milestone.confidence }}
+        </div>
+      </div>
+
+      <div class="production-orbit" aria-hidden="true">
+        <div class="orbit-ring orbit-one"></div>
+        <div class="orbit-ring orbit-two"></div>
+        <div class="orbit-core">68<small>%</small></div>
+        <span class="orbit-dot dot-a"></span>
+        <span class="orbit-dot dot-b"></span>
+        <span class="orbit-dot dot-c"></span>
+      </div>
+
+      <div class="workflow-strip" aria-label="目前製作流程分布">
+        <div v-for="stage in dashboardSnapshot.workflow" :key="stage.label" class="workflow-stage">
+          <span :class="`stage-node tone-${stage.tone}`">{{ stage.count }}</span>
+          <small>{{ stage.label }}</small>
+        </div>
+      </div>
+
+      <div class="focus-progress">
+        <div>
+          <span>里程碑完成度</span>
+          <strong>{{ dashboardSnapshot.milestone.progress }}%</strong>
+        </div>
+        <div class="bento-progress">
+          <span data-progress :style="`width: ${dashboardSnapshot.milestone.progress}%`"></span>
+        </div>
+      </div>
+
+      <footer class="focus-footer">
+        <button type="button">查看里程碑</button>
+        <button type="button">
+          開啟風險清單 <span class="material-symbols-rounded">arrow_forward</span>
+        </button>
+      </footer>
+    </section>
+
+    <article
+      v-for="metric in dashboardSnapshot.metrics"
+      :key="metric.label"
+      :class="`bento-card metric-tile tone-card-${metric.tone}`"
+      data-enter
+    >
+      <header class="bento-header compact-header">
+        <h2>{{ metric.label }}</h2>
+        <button class="mini-action" type="button" :aria-label="`查看${metric.label}詳情`">
+          <span class="material-symbols-rounded">open_in_new</span>
+        </button>
+      </header>
+      <div class="metric-visual">
+        <div>
+          <p><span :class="`metric-dot tone-${metric.tone}`"></span>{{ metric.delta }}</p>
+          <strong
+            >{{ metric.value }}<small v-if="metric.unit">{{ metric.unit }}</small></strong
+          >
+        </div>
+        <svg class="sparkline" viewBox="0 0 100 48" aria-hidden="true">
+          <polyline :class="`spark-tone-${metric.tone}`" :points="trendPoints(metric.trend)" />
+          <circle
+            :class="`spark-tone-${metric.tone}`"
+            cx="100"
+            :cy="70 - metric.trend[metric.trend.length - 1]"
+            r="2.8"
+          />
+        </svg>
+      </div>
+    </article>
+
+    <section class="bento-card feature-health" data-enter>
+      <header class="bento-header">
+        <div>
+          <span class="bento-kicker">FEATURE HEALTH</span>
+          <h2>Feature 健康度</h2>
+        </div>
+        <button class="mini-action" type="button" aria-label="開啟 Feature">
+          <span class="material-symbols-rounded">more_horiz</span>
+        </button>
+      </header>
+
+      <div class="feature-score">
+        <strong>24</strong>
+        <span>進行中</span>
+        <small>6 個團隊參與</small>
+      </div>
+
+      <div class="feature-health-list">
+        <article v-for="feature in dashboardSnapshot.features" :key="feature.name">
+          <div class="feature-health-meta">
+            <div>
+              <strong>{{ feature.name }}</strong
+              ><span>{{ feature.team }}</span>
+            </div>
+            <div>
+              <b>{{ feature.progress }}%</b
+              ><small :class="`text-${feature.tone}`">{{ feature.status }}</small>
+            </div>
+          </div>
+          <div class="bento-progress small-progress">
+            <span
+              data-progress
+              :class="`fill-${feature.tone}`"
+              :style="`width: ${feature.progress}%`"
+            ></span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="bento-card handoff-gauge" data-enter>
+      <header class="bento-header">
+        <div>
+          <span class="bento-kicker">HANDOFF</span>
+          <h2>交接等待時間</h2>
+        </div>
+        <button class="mini-action" type="button" aria-label="開啟交接中心">
+          <span class="material-symbols-rounded">open_in_new</span>
+        </button>
+      </header>
+
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 220 125" aria-hidden="true">
+          <path class="gauge-track" pathLength="100" d="M 20 108 A 90 90 0 0 1 200 108" />
+          <path class="gauge-fill" pathLength="100" d="M 20 108 A 90 90 0 0 1 200 108" />
+        </svg>
+        <div class="gauge-value">
+          <span>平均等待</span>
+          <strong>13<small>h</small></strong>
+        </div>
+      </div>
+      <div class="gauge-footer">
+        <span><i class="tone-green"></i>正常 5</span>
+        <span><i class="tone-amber"></i>注意 2</span>
+        <span><i class="tone-red"></i>逾時 1</span>
+      </div>
+    </section>
+
+    <section class="bento-card completed-tasks" data-enter>
+      <header class="bento-header compact-header">
+        <div>
+          <span class="bento-kicker">THIS WEEK</span>
+          <h2>完成任務</h2>
+        </div>
+      </header>
+      <div class="completed-body">
+        <div>
+          <strong>110</strong>
+          <p><span></span>比上週多 11%</p>
+        </div>
+        <div class="mini-bars" aria-label="本週任務完成趨勢">
+          <i style="height: 32%"></i><i style="height: 47%"></i><i style="height: 72%"></i>
+          <i class="hot" style="height: 92%"></i><i class="hot" style="height: 78%"></i>
+          <i style="height: 56%"></i><i style="height: 39%"></i>
+        </div>
+      </div>
+    </section>
+
+    <section class="bento-card team-pulse" data-enter>
+      <header class="bento-header">
+        <div>
+          <span class="bento-kicker">TEAM PULSE</span>
+          <h2>團隊信心</h2>
+        </div>
+        <button class="mini-action" type="button" aria-label="篩選團隊狀態">
+          <span class="material-symbols-rounded">filter_list</span>
+        </button>
+      </header>
+      <div class="pulse-chart">
+        <div v-for="pulse in dashboardSnapshot.teamPulse" :key="pulse.label" class="pulse-column">
+          <div class="pulse-value">
+            <strong>{{ pulse.value }}<small>%</small></strong>
+            <span :class="`text-${pulse.tone}`">{{ pulse.label }}</span>
+          </div>
+          <div class="pulse-bar-shell">
+            <span
+              data-progress-y
+              :class="`pulse-${pulse.tone}`"
+              :style="`height: ${pulse.value}%`"
+            ></span>
+          </div>
+        </div>
+      </div>
+      <p class="pulse-note">12 位成員已更新今日狀態 · 3 位需要協助</p>
+    </section>
   </div>
 </template>

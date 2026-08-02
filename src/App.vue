@@ -1,99 +1,168 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
-type NavItem = {
-  label: string;
-  icon: string;
-  path: string;
-  badge?: number;
-};
+type NavItem = { label: string; icon: string; path: string; badge?: number };
 
 const route = useRoute();
+const appWindow = getCurrentWindow();
 
 const primaryNav: NavItem[] = [
-  { label: "總覽", icon: "⌂", path: "/" },
-  { label: "專案", icon: "◫", path: "/projects" },
-  { label: "Feature", icon: "◇", path: "/features" },
-  { label: "製作流程", icon: "⌁", path: "/workflows" },
-  { label: "Asset", icon: "▦", path: "/assets" },
-  { label: "任務", icon: "✓", path: "/tasks", badge: 12 },
-  { label: "團隊", icon: "◎", path: "/team" },
+  { label: "總覽", icon: "dashboard", path: "/" },
+  { label: "專案", icon: "folder", path: "/projects" },
+  { label: "Feature", icon: "deployed_code", path: "/features" },
+  { label: "製作流程", icon: "account_tree", path: "/workflows" },
+  { label: "Asset", icon: "category", path: "/assets" },
+  { label: "任務", icon: "task_alt", path: "/tasks", badge: 12 },
+  { label: "跨團隊交接", icon: "swap_horiz", path: "/handoffs", badge: 8 },
+  { label: "阻塞中心", icon: "warning", path: "/blockers", badge: 5 },
+  { label: "團隊", icon: "groups", path: "/team" },
 ];
 
 const secondaryNav: NavItem[] = [
-  { label: "文件", icon: "▤", path: "/documents" },
-  { label: "通知", icon: "◉", path: "/notifications", badge: 3 },
-  { label: "設定", icon: "⚙", path: "/settings" },
+  { label: "文件", icon: "description", path: "/documents" },
+  { label: "通知", icon: "notifications", path: "/notifications", badge: 3 },
+  { label: "設定", icon: "settings", path: "/settings" },
+];
+
+const quickNav = [
+  { label: "總覽", path: "/" },
+  { label: "Feature", path: "/features" },
+  { label: "製作流程", path: "/workflows" },
+  { label: "Asset", path: "/assets" },
+  { label: "交接", path: "/handoffs" },
 ];
 
 const pageTitle = computed(() => String(route.meta.title ?? "專案總覽"));
 const pageSection = computed(() => String(route.meta.section ?? "NOVA ODYSSEY"));
+
+const runWindowAction = async (action: () => Promise<void>) => {
+  try {
+    await action();
+  } catch {
+    // Window controls are inert when the Vue app is previewed outside Tauri.
+  }
+};
+
+const minimizeWindow = () => runWindowAction(() => appWindow.minimize());
+const toggleMaximizeWindow = () => runWindowAction(() => appWindow.toggleMaximize());
+const closeWindow = () => runWindowAction(() => appWindow.close());
 </script>
 
 <template>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <RouterLink class="brand" to="/" aria-label="Pulsar Port 首頁">
-        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span>Pulsar <b>Port</b></span>
-      </RouterLink>
-
-      <div class="project-switcher">
-        <span class="project-avatar">NO</span>
-        <span class="project-copy">
-          <small>目前專案</small>
-          <strong>Nova Odyssey</strong>
-        </span>
-        <button type="button" aria-label="切換專案">⌄</button>
-      </div>
-
-      <nav aria-label="主要導覽">
-        <p class="nav-label">工作區</p>
-        <RouterLink v-for="item in primaryNav" :key="item.path" :to="item.path" class="nav-item">
-          <span class="nav-icon" aria-hidden="true">{{ item.icon }}</span>
-          <span>{{ item.label }}</span>
-          <span v-if="item.badge" class="nav-badge">{{ item.badge }}</span>
-        </RouterLink>
-
-        <p class="nav-label nav-label-spaced">系統</p>
-        <RouterLink v-for="item in secondaryNav" :key="item.path" :to="item.path" class="nav-item">
-          <span class="nav-icon" aria-hidden="true">{{ item.icon }}</span>
-          <span>{{ item.label }}</span>
-          <span v-if="item.badge" class="nav-badge">{{ item.badge }}</span>
-        </RouterLink>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="avatar">CL</div>
-        <div>
-          <strong>Choco Lin</strong>
-          <span>Project Lead</span>
+  <div class="window-stage">
+    <div class="app-window">
+      <header class="custom-titlebar" data-tauri-drag-region>
+        <div class="titlebar-brand" data-tauri-drag-region>
+          <span class="brand-mark titlebar-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <strong data-tauri-drag-region>Pulsar Port</strong>
         </div>
-        <button type="button" aria-label="帳號選單">•••</button>
-      </div>
-    </aside>
-
-    <main class="workspace">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">{{ pageSection }}</p>
-          <h1>{{ pageTitle }}</h1>
+        <div class="titlebar-context" data-tauri-drag-region>
+          <span data-tauri-drag-region>Nova Odyssey</span>
+          <i data-tauri-drag-region></i>
+          <small data-tauri-drag-region>ALPHA</small>
         </div>
-        <div class="topbar-actions">
-          <button class="icon-button" type="button" aria-label="搜尋">⌕</button>
-          <RouterLink class="icon-button notification-button" to="/notifications" aria-label="通知">
-            ◉<span></span>
-          </RouterLink>
-          <button class="primary-button" type="button"><span>＋</span> 新增工作</button>
+        <div class="window-controls">
+          <button type="button" aria-label="最小化視窗" @click="minimizeWindow">
+            <span class="material-symbols-rounded">minimize</span>
+          </button>
+          <button type="button" aria-label="最大化或還原視窗" @click="toggleMaximizeWindow">
+            <span class="material-symbols-rounded">crop_square</span>
+          </button>
+          <button class="close-control" type="button" aria-label="關閉視窗" @click="closeWindow">
+            <span class="material-symbols-rounded">close</span>
+          </button>
         </div>
       </header>
 
-      <RouterView v-slot="{ Component }">
-        <Transition name="page" mode="out-in">
-          <component :is="Component" />
-        </Transition>
-      </RouterView>
-    </main>
+      <div class="app-shell compact-shell window-content-shell">
+        <aside class="sidebar tool-rail">
+          <RouterLink class="brand rail-brand" to="/" aria-label="Pulsar Port 首頁">
+            <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          </RouterLink>
+
+          <RouterLink
+            class="project-avatar rail-project"
+            to="/projects"
+            aria-label="目前專案 Nova Odyssey"
+            >NO</RouterLink
+          >
+
+          <nav class="rail-nav" aria-label="主要導覽">
+            <RouterLink
+              v-for="item in primaryNav"
+              :key="item.path"
+              :to="item.path"
+              class="nav-item rail-item"
+              :data-label="item.label"
+              :aria-label="item.label"
+            >
+              <span class="nav-icon material-symbols-rounded" aria-hidden="true">{{
+                item.icon
+              }}</span>
+              <span v-if="item.badge" class="rail-badge">{{ item.badge }}</span>
+            </RouterLink>
+          </nav>
+
+          <nav class="rail-nav rail-nav-secondary" aria-label="系統導覽">
+            <RouterLink
+              v-for="item in secondaryNav"
+              :key="item.path"
+              :to="item.path"
+              class="nav-item rail-item"
+              :data-label="item.label"
+              :aria-label="item.label"
+            >
+              <span class="nav-icon material-symbols-rounded" aria-hidden="true">{{
+                item.icon
+              }}</span>
+              <span v-if="item.badge" class="rail-badge">{{ item.badge }}</span>
+            </RouterLink>
+          </nav>
+
+          <RouterLink class="avatar rail-avatar" to="/settings" aria-label="Choco Lin 帳號設定"
+            >CL</RouterLink
+          >
+        </aside>
+
+        <main class="workspace control-workspace">
+          <header class="topbar control-topbar">
+            <div class="topbar-heading">
+              <p class="eyebrow">{{ pageSection }}</p>
+              <h1>{{ pageTitle }}</h1>
+            </div>
+
+            <nav class="quick-nav" aria-label="快速功能導覽">
+              <RouterLink v-for="item in quickNav" :key="item.path" :to="item.path">{{
+                item.label
+              }}</RouterLink>
+            </nav>
+
+            <div class="topbar-actions">
+              <button class="icon-button" type="button" aria-label="搜尋">
+                <span class="material-symbols-rounded">search</span>
+              </button>
+              <RouterLink
+                class="icon-button notification-button"
+                to="/notifications"
+                aria-label="通知"
+              >
+                <span class="material-symbols-rounded">notifications</span><i></i>
+              </RouterLink>
+              <button class="primary-button" type="button">
+                <span class="material-symbols-rounded">add</span>新增工作
+              </button>
+            </div>
+          </header>
+
+          <RouterView v-slot="{ Component }">
+            <Transition name="page" mode="out-in">
+              <component :is="Component" />
+            </Transition>
+          </RouterView>
+        </main>
+      </div>
+    </div>
   </div>
 </template>
