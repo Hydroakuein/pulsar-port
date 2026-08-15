@@ -13,8 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  web-and-api:
-    name: Lint, typecheck, test and build
+  web:
+    name: Lint, typecheck and build
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository

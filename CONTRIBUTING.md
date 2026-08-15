@@ -9,7 +9,7 @@ Create short-lived branches from `main` using one of these prefixes:
 - `chore/` for tooling and maintenance
 - `docs/` for documentation-only changes
 
-Use lowercase kebab-case, for example `feat/worker-health-check`.
+Use lowercase kebab-case, for example `feat/art-asset-browser`.
 
 ## Commits
 
@@ -50,5 +50,4 @@ Enable the repository pre-commit hook once after cloning:
 npm run hooks:install
 ```
 
-Pull requests must pass both CI jobs. Never commit `.env`, `.dev.vars`, database URLs,
-Cloudflare API tokens, or other credentials.
+Pull requests must pass both CI jobs. Never commit `.env`, access tokens, or other credentials.

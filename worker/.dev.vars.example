@@ -1,3 +1,0 @@
-# Copy this file to .dev.vars when local-only secrets are introduced.
-# Non-secret local configuration already lives in wrangler.jsonc.
-DATABASE_URL=postgresql://user:password@localhost:5432/pulsar_port

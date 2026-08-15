@@ -12,17 +12,10 @@ dist
 dist-ssr
 *.local
 coverage
-.wrangler
-worker/.wrangler
-worker/worker-configuration.d.ts
 
-# Local environment files (examples remain versioned)
+# Local environment files
 .env
 .env.*
-!.env.example
-.dev.vars
-*.dev.vars
-!worker/.dev.vars.example
 
 # Editor directories and files
 .vscode/*
@@ -36,4 +29,3 @@ worker/worker-configuration.d.ts
 *.sw?
 
 .vscode
-/roadmap
