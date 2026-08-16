@@ -1,4 +1,4 @@
-# 探波熱 Pulsar Port
+# 探波熱 Pulsar-port
 
 Pulsar Port 是遊戲製作團隊使用的桌面工作區。目前專案聚焦四個前端功能入口：
 
