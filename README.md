@@ -26,6 +26,7 @@ Pulsar Port 是遊戲製作團隊使用的桌面工作區。目前專案聚焦�
 
 ```text
 src/                 Vue 前端
+src/assets           ignoredone製作的vol.4圖標
 src/components/      共用畫面元件
 src/views/           四個功能頁面
 src/router/          前端路由
