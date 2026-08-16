@@ -44,6 +44,12 @@ Check the Tauri Rust crate separately:
 npm run check:rust
 ```
 
+Check the Cloudflare Worker:
+
+```bash
+npm run check:worker
+```
+
 Enable the repository pre-commit hook once after cloning:
 
 ```bash

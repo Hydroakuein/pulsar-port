@@ -29,8 +29,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Worker dependencies
+        run: npm ci --prefix worker
+
       - name: Run quality gate
         run: npm run check
+
+      - name: Check Cloudflare Worker
+        run: npm run check:worker
 
   rust:
     name: Cargo check

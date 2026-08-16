@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "pulsar-port-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-16",
+  "vars": {
+    "SUPABASE_URL": "https://pybnplykkprkwishpkyu.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_DcnaYaEb-9bn-Q4Wto_Hnw_-tPlRavT",
+    "ALLOWED_ORIGIN": "*",
+  },
+}

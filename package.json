@@ -15,15 +15,19 @@
     "format:check": "prettier --check .",
     "check": "npm run lint && npm run typecheck && npm run format:check && npm run build:web",
     "check:rust": "cargo check --locked --manifest-path src-tauri/Cargo.toml",
-    "check:all": "npm run check && npm run check:rust",
+    "check:worker": "npm --prefix worker run check",
+    "check:all": "npm run check && npm run check:worker && npm run check:rust",
     "hooks:install": "git config core.hooksPath .githooks",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "worker:dev": "npm --prefix worker run dev",
+    "worker:deploy": "npm --prefix worker run deploy"
   },
   "dependencies": {
     "@lucide/vue": "^1.31.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-stronghold": "^2.3.1",
     "gsap": "^3.15.0",
     "vue": "^3.5.13",
     "vue-router": "^4.6.4"
