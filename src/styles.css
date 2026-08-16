@@ -144,8 +144,10 @@ a:focus-visible {
   background: #d84e4e;
 }
 
-.window-controls .material-symbols-rounded {
-  font-size: 17px;
+.window-controls svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 1.8;
 }
 
 .app-shell {
@@ -194,8 +196,11 @@ a:focus-visible {
   background: var(--accent-soft);
 }
 
-.sidebar .material-symbols-rounded {
-  font-size: 20px;
+.sidebar .nav-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  stroke-width: 1.8;
 }
 
 .workspace {
@@ -208,22 +213,6 @@ a:focus-visible {
   width: 100%;
   min-height: 100%;
   background: var(--surface);
-}
-
-.material-symbols-rounded {
-  display: inline-block;
-  direction: ltr;
-  font-family: "Material Symbols Rounded";
-  font-style: normal;
-  font-weight: normal;
-  font-feature-settings: "liga";
-  font-variation-settings:
-    "FILL" 0,
-    "wght" 400,
-    "GRAD" 0,
-    "opsz" 24;
-  line-height: 1;
-  white-space: nowrap;
 }
 
 @media (max-width: 760px) {
@@ -273,7 +262,7 @@ a:focus-visible {
 
   .sidebar nav {
     height: 100%;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   .sidebar a {

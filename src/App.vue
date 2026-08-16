@@ -1,20 +1,23 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { BookOpen, Box, FileText, GitFork, Minus, Shapes, Square, X } from "@lucide/vue";
+import type { Component } from "vue";
 
 type NavItem = {
   label: string;
-  icon: string;
+  icon: Component;
   path: string;
 };
 
 const appWindow = getCurrentWindow();
 
 const navigation: NavItem[] = [
-  { label: "美術素材瀏覽", icon: "category", path: "/art-assets" },
-  { label: "Git 版控狀態路線圖", icon: "account_tree", path: "/git-roadmap" },
-  { label: "Lore", icon: "deployed_code", path: "/lore" },
-  { label: "共享筆記本", icon: "description", path: "/notebook" },
+  { label: "美術素材瀏覽", icon: Shapes, path: "/art-assets" },
+  { label: "Git 版控狀態路線圖", icon: GitFork, path: "/git-roadmap" },
+  { label: "Lore", icon: Box, path: "/lore" },
+  { label: "共享筆記本", icon: FileText, path: "/notebook" },
+  { label: "教學資源", icon: BookOpen, path: "/tutorial-resources" },
 ];
 
 const runWindowAction = async (action: () => Promise<void>) => {
@@ -41,13 +44,13 @@ const closeWindow = () => runWindowAction(() => appWindow.close());
 
         <div class="window-controls">
           <button type="button" aria-label="最小化視窗" @click="minimizeWindow">
-            <span class="material-symbols-rounded">minimize</span>
+            <Minus aria-hidden="true" />
           </button>
           <button type="button" aria-label="最大化或還原視窗" @click="toggleMaximizeWindow">
-            <span class="material-symbols-rounded">crop_square</span>
+            <Square aria-hidden="true" />
           </button>
           <button class="close-control" type="button" aria-label="關閉視窗" @click="closeWindow">
-            <span class="material-symbols-rounded">close</span>
+            <X aria-hidden="true" />
           </button>
         </div>
       </header>
@@ -56,7 +59,7 @@ const closeWindow = () => runWindowAction(() => appWindow.close());
         <aside class="sidebar">
           <nav aria-label="主要導覽">
             <RouterLink v-for="item in navigation" :key="item.path" :to="item.path">
-              <span class="material-symbols-rounded" aria-hidden="true">{{ item.icon }}</span>
+              <component :is="item.icon" class="nav-icon" aria-hidden="true" />
               <span>{{ item.label }}</span>
             </RouterLink>
           </nav>

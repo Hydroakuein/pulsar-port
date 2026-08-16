@@ -4,6 +4,7 @@ import ArtAssetsView from "../views/ArtAssetsView.vue";
 import GitRoadmapView from "../views/GitRoadmapView.vue";
 import LoreView from "../views/LoreView.vue";
 import SharedNotebookView from "../views/SharedNotebookView.vue";
+import TutorialResourcesView from "../views/TutorialResourcesView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -32,6 +33,12 @@ const router = createRouter({
       name: "notebook",
       component: SharedNotebookView,
       meta: { title: "共享筆記本" },
+    },
+    {
+      path: "/tutorial-resources",
+      name: "tutorial-resources",
+      component: TutorialResourcesView,
+      meta: { title: "教學資源" },
     },
     { path: "/:pathMatch(.*)*", redirect: "/art-assets" },
   ],
