@@ -76,11 +76,10 @@ a:focus-visible {
 .brand {
   height: 100%;
   padding-left: 18px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 10px;
   color: var(--ink);
-  text-decoration: none;
 }
 
 .brand strong {
@@ -93,6 +92,11 @@ a:focus-visible {
   height: 22px;
   display: block;
   object-fit: contain;
+}
+
+.brand-home {
+  display: block;
+  text-decoration: none;
 }
 
 .window-controls {

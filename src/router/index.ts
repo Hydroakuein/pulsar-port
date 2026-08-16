@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import ArtAssetsView from "../views/ArtAssetsView.vue";
 import GitRoadmapView from "../views/GitRoadmapView.vue";
+import HomeView from "../views/HomeView.vue";
 import LoreView from "../views/LoreView.vue";
 import SharedNotebookView from "../views/SharedNotebookView.vue";
 import TutorialResourcesView from "../views/TutorialResourcesView.vue";
@@ -9,7 +10,12 @@ import TutorialResourcesView from "../views/TutorialResourcesView.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", redirect: "/art-assets" },
+    {
+      path: "/",
+      name: "home",
+      component: HomeView,
+      meta: { title: "首頁" },
+    },
     {
       path: "/art-assets",
       name: "art-assets",
@@ -40,7 +46,7 @@ const router = createRouter({
       component: TutorialResourcesView,
       meta: { title: "教學資源" },
     },
-    { path: "/:pathMatch(.*)*", redirect: "/art-assets" },
+    { path: "/:pathMatch(.*)*", redirect: "/" },
   ],
   scrollBehavior: () => ({ top: 0 }),
 });

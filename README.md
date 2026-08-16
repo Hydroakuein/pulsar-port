@@ -4,7 +4,7 @@ Pulsar Port 是遊戲製作團隊使用的桌面工作區。目前專案聚焦�
 
 - 美術素材瀏覽
 - Git 版控狀態路線圖
-- Lore 製作管理
+- Lore 二進制資產版控管理
 - 共享筆記本
 
 <img width="1794" height="1118" alt="image" src="https://github.com/user-attachments/assets/cdf0c9c0-c619-44ba-b9fb-1cf31815257d" />

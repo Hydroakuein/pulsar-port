@@ -38,10 +38,12 @@ const closeWindow = () => runWindowAction(() => appWindow.close());
   <div class="window-stage">
     <div class="app-window">
       <header class="titlebar" data-tauri-drag-region>
-        <RouterLink class="brand" to="/art-assets" aria-label="Pulsar Port 首頁">
-          <img class="brand-icon" :src="appIconUrl" alt="" />
+        <div class="brand">
+          <RouterLink class="brand-home" to="/" aria-label="返回 Pulsar Port 首頁">
+            <img class="brand-icon" :src="appIconUrl" alt="" />
+          </RouterLink>
           <strong>Pulsar Port</strong>
-        </RouterLink>
+        </div>
 
         <div class="window-controls">
           <button type="button" aria-label="最小化視窗" @click="minimizeWindow">
