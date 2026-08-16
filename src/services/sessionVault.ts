@@ -10,7 +10,9 @@ type StrongholdContext = {
   store: ReturnType<import("@tauri-apps/plugin-stronghold").Client["getStore"]>;
 };
 
-async function openStronghold(): Promise<StrongholdContext | null> {
+let strongholdContext: Promise<StrongholdContext | null> | null = null;
+
+async function createStrongholdContext(): Promise<StrongholdContext | null> {
   try {
     const [{ appDataDir }, { Stronghold }] = await Promise.all([
       import("@tauri-apps/api/path"),
@@ -30,6 +32,11 @@ async function openStronghold(): Promise<StrongholdContext | null> {
   } catch {
     return null;
   }
+}
+
+function openStronghold(): Promise<StrongholdContext | null> {
+  strongholdContext ??= createStrongholdContext();
+  return strongholdContext;
 }
 
 export async function loadStoredSession(): Promise<AuthSession | null> {

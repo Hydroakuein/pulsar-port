@@ -37,9 +37,9 @@ const minimizeWindow = () => runWindowAction(() => appWindow.minimize());
 const toggleMaximizeWindow = () => runWindowAction(() => appWindow.toggleMaximize());
 const closeWindow = () => runWindowAction(() => appWindow.close());
 
-const handleLogout = async () => {
-  await logout();
-  await router.replace("/login");
+const handleLogout = () => {
+  logout();
+  void router.replace("/login");
 };
 </script>
 

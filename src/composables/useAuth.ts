@@ -17,11 +17,16 @@ const state = reactive<{
 });
 
 let initialization: Promise<void> | null = null;
+let persistenceQueue: Promise<void> = Promise.resolve();
 
-async function applyAuth(payload: { session: AuthSession; user: AuthUser }) {
+function queuePersistence(task: () => Promise<void>) {
+  persistenceQueue = persistenceQueue.then(task, task).catch(() => undefined);
+}
+
+function applyAuth(payload: { session: AuthSession; user: AuthUser }) {
   state.session = payload.session;
   state.user = payload.user;
-  await saveStoredSession(payload.session);
+  queuePersistence(() => saveStoredSession(payload.session));
 }
 
 export function initializeAuth(): Promise<void> {
@@ -32,7 +37,7 @@ export function initializeAuth(): Promise<void> {
     state.loading = true;
     try {
       const stored = await loadStoredSession();
-      if (stored?.refreshToken) await applyAuth(await authApi.refresh(stored.refreshToken));
+      if (stored?.refreshToken) applyAuth(await authApi.refresh(stored.refreshToken));
     } catch {
       await clearStoredSession();
       state.session = null;
@@ -49,21 +54,19 @@ export function initializeAuth(): Promise<void> {
 async function login(email: string, password: string) {
   state.loading = true;
   try {
-    await applyAuth(await authApi.login(email, password));
+    applyAuth(await authApi.login(email, password));
   } finally {
     state.loading = false;
   }
 }
 
-async function logout() {
+function logout() {
   const accessToken = state.session?.accessToken;
-  try {
-    if (accessToken) await authApi.logout(accessToken);
-  } finally {
-    state.session = null;
-    state.user = null;
-    await clearStoredSession();
-  }
+  state.session = null;
+  state.user = null;
+  queuePersistence(clearStoredSession);
+
+  if (accessToken) void authApi.logout(accessToken).catch(() => undefined);
 }
 
 async function getAccessToken(forceRefresh = false): Promise<string> {
@@ -73,7 +76,7 @@ async function getAccessToken(forceRefresh = false): Promise<string> {
   const expiresSoon = session.expiresAt !== null && session.expiresAt * 1000 <= Date.now() + 30_000;
   if (!forceRefresh && !expiresSoon) return session.accessToken;
 
-  await applyAuth(await authApi.refresh(session.refreshToken));
+  applyAuth(await authApi.refresh(session.refreshToken));
   if (!state.session) throw new Error("登入已失效");
   return state.session.accessToken;
 }

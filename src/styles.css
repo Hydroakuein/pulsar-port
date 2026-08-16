@@ -140,6 +140,11 @@ a:focus-visible {
   display: block;
 }
 
+.app-shell-auth .workspace {
+  width: 100%;
+  height: 100%;
+}
+
 .sidebar {
   padding: 24px 14px;
   display: flex;
