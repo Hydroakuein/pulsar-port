@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from "vue-router";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { BookOpen, Box, FileText, GitFork, Minus, Shapes, Square, X } from "@lucide/vue";
 import type { Component } from "vue";
+import appIconUrl from "./assets/27.png";
 
 type NavItem = {
   label: string;
@@ -38,7 +39,7 @@ const closeWindow = () => runWindowAction(() => appWindow.close());
     <div class="app-window">
       <header class="titlebar" data-tauri-drag-region>
         <RouterLink class="brand" to="/art-assets" aria-label="Pulsar Port 首頁">
-          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <img class="brand-icon" :src="appIconUrl" alt="" />
           <strong>Pulsar Port</strong>
         </RouterLink>
 

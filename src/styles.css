@@ -1,20 +1,20 @@
 :root {
   font-family: "Segoe UI", "Noto Sans TC", system-ui, sans-serif;
-  color: #20231c;
+  color: #182235;
   background: transparent;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --canvas: #eef1ea;
-  --surface: #ffffff;
-  --surface-muted: #f7f8f4;
-  --ink: #20231c;
-  --muted: #747a6e;
-  --line: #dfe4d8;
-  --accent: #f5e832;
-  --accent-soft: #fff9ba;
-  --green: #91bc47;
-  --shadow: 0 18px 42px rgba(46, 53, 38, 0.08);
+  --canvas: #edf5f8;
+  --surface: #fafafa;
+  --surface-muted: #edf4fa;
+  --ink: #182235;
+  --muted: #66758c;
+  --line: #ccdce8;
+  --accent: #3822e6;
+  --accent-soft: #dfe7ff;
+  --green: #69ead5;
+  --shadow: 0 18px 42px rgba(47, 70, 121, 0.1);
 }
 
 * {
@@ -52,20 +52,15 @@ a:focus-visible {
 .window-stage {
   width: 100%;
   height: 100%;
-  padding: 10px;
   overflow: hidden;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.68);
-  clip-path: inset(0 round 22px);
+  background: var(--canvas);
 }
 
 .app-window {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 16px;
   background: var(--canvas);
-  clip-path: inset(0 round 16px);
 }
 
 .titlebar {
@@ -74,7 +69,7 @@ a:focus-visible {
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--line);
-  background: rgba(250, 251, 247, 0.96);
+  background: #e3e3e3;
   user-select: none;
 }
 
@@ -93,30 +88,11 @@ a:focus-visible {
   letter-spacing: 0.02em;
 }
 
-.brand-mark {
-  position: relative;
+.brand-icon {
   width: 22px;
   height: 22px;
-  display: inline-block;
-}
-
-.brand-mark i {
-  position: absolute;
-  inset: 4px 1px;
-  border: 1.5px solid var(--ink);
-  border-radius: 50%;
-  transform: rotate(38deg);
-}
-
-.brand-mark i:nth-child(2) {
-  transform: rotate(-38deg);
-}
-
-.brand-mark i:nth-child(3) {
-  inset: 8px;
-  border: 0;
-  background: var(--accent);
-  box-shadow: 0 0 0 3px rgba(245, 232, 50, 0.24);
+  display: block;
+  object-fit: contain;
 }
 
 .window-controls {
@@ -136,7 +112,7 @@ a:focus-visible {
 }
 
 .window-controls button:hover {
-  background: #e7eadf;
+  background: #e3edf4;
 }
 
 .window-controls .close-control:hover {
@@ -159,7 +135,7 @@ a:focus-visible {
 .sidebar {
   padding: 24px 14px;
   border-right: 1px solid var(--line);
-  background: rgba(250, 251, 247, 0.96);
+  background: #e3e3e3;
 }
 
 .sidebar nav {
@@ -175,7 +151,7 @@ a:focus-visible {
   gap: 12px;
   border: 1px solid transparent;
   border-radius: 12px;
-  color: #63695d;
+  color: #586779;
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
@@ -190,9 +166,16 @@ a:focus-visible {
   background: var(--surface-muted);
 }
 
-.sidebar a.router-link-active {
+.sidebar a:focus-visible {
+  outline: none;
   color: var(--ink);
-  border-color: #e8df57;
+  background: var(--surface-muted);
+}
+
+.sidebar a.router-link-active {
+  border-radius: 0;
+  color: var(--ink);
+  border-color: transparent;
   background: var(--accent-soft);
 }
 

@@ -111,7 +111,7 @@ onBeforeUnmount(() => media?.revert());
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #7c852d;
+  color: #526fa8;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.18em;
@@ -156,7 +156,7 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 24px;
   background: var(--surface-muted);
-  box-shadow: 0 14px 38px rgba(46, 53, 38, 0.06);
+  box-shadow: 0 14px 38px rgba(47, 70, 121, 0.08);
   transform-origin: center bottom;
   transition:
     border-color 0.2s ease,
@@ -165,8 +165,8 @@ h1 {
 
 .resource-card:hover,
 .resource-card:focus-visible {
-  border-color: #d4d985;
-  box-shadow: 0 22px 48px rgba(46, 53, 38, 0.11);
+  border-color: #8196d4;
+  box-shadow: 0 22px 48px rgba(47, 70, 121, 0.14);
 }
 
 .resource-card:focus-visible {
@@ -175,11 +175,11 @@ h1 {
 }
 
 .art-card {
-  background: linear-gradient(145deg, #fffdf0 0%, #f7f7ee 64%);
+  background: linear-gradient(145deg, #f9fdff 0%, #e9f1fa 100%);
 }
 
 .code-card {
-  background: linear-gradient(145deg, #f4f8ed 0%, #f7f8f4 64%);
+  background: linear-gradient(145deg, #f5ffff 0%, #dff3f4 100%);
 }
 
 .card-icon {
@@ -189,7 +189,7 @@ h1 {
   height: 54px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(32, 35, 28, 0.1);
+  border: 1px solid rgba(56, 34, 230, 0.12);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.72);
 }
@@ -202,10 +202,12 @@ h1 {
 
 .art-card .card-icon {
   background: var(--accent-soft);
+  color: #3822e6;
 }
 
 .code-card .card-icon {
-  background: #e4f1ce;
+  color: #194f67;
+  background: #c9faef;
 }
 
 .card-copy {
@@ -214,7 +216,7 @@ h1 {
 }
 
 .card-index {
-  color: #9aa08f;
+  color: #7d91a9;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.15em;
@@ -241,7 +243,7 @@ h2 {
   right: -60px;
   width: 190px;
   height: 190px;
-  border: 1px solid rgba(32, 35, 28, 0.08);
+  border: 1px solid rgba(56, 34, 230, 0.1);
   border-radius: 50%;
   box-shadow:
     0 0 0 28px rgba(255, 255, 255, 0.3),
