@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
+import { useRouter } from "vue-router";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { BookOpen, Box, FileText, GitFork, Minus, Shapes, Square, X } from "@lucide/vue";
+import { BookOpen, Box, FileText, GitFork, LogOut, Minus, Shapes, Square, X } from "@lucide/vue";
 import type { Component } from "vue";
 import appIconUrl from "./assets/27.png";
+import { useAuth } from "./composables/useAuth";
 
 type NavItem = {
   label: string;
@@ -12,6 +14,8 @@ type NavItem = {
 };
 
 const appWindow = getCurrentWindow();
+const router = useRouter();
+const { state: authState, logout } = useAuth();
 
 const navigation: NavItem[] = [
   { label: "美術素材瀏覽", icon: Shapes, path: "/art-assets" },
@@ -32,6 +36,11 @@ const runWindowAction = async (action: () => Promise<void>) => {
 const minimizeWindow = () => runWindowAction(() => appWindow.minimize());
 const toggleMaximizeWindow = () => runWindowAction(() => appWindow.toggleMaximize());
 const closeWindow = () => runWindowAction(() => appWindow.close());
+
+const handleLogout = async () => {
+  await logout();
+  await router.replace("/login");
+};
 </script>
 
 <template>
@@ -39,9 +48,15 @@ const closeWindow = () => runWindowAction(() => appWindow.close());
     <div class="app-window">
       <header class="titlebar" data-tauri-drag-region>
         <div class="brand">
-          <RouterLink class="brand-home" to="/" aria-label="返回 Pulsar Port 首頁">
+          <RouterLink
+            v-if="authState.user"
+            class="brand-home"
+            to="/"
+            aria-label="返回 Pulsar Port 首頁"
+          >
             <img class="brand-icon" :src="appIconUrl" alt="" />
           </RouterLink>
+          <img v-else class="brand-icon" :src="appIconUrl" alt="" />
           <strong>Pulsar Port</strong>
         </div>
 
@@ -58,14 +73,24 @@ const closeWindow = () => runWindowAction(() => appWindow.close());
         </div>
       </header>
 
-      <div class="app-shell">
-        <aside class="sidebar">
+      <div class="app-shell" :class="{ 'app-shell-auth': !authState.user }">
+        <aside v-if="authState.user" class="sidebar">
           <nav aria-label="主要導覽">
             <RouterLink v-for="item in navigation" :key="item.path" :to="item.path">
               <component :is="item.icon" class="nav-icon" aria-hidden="true" />
               <span>{{ item.label }}</span>
             </RouterLink>
           </nav>
+
+          <div class="sidebar-account">
+            <div>
+              <span>{{ authState.user.role === "admin" ? "管理員" : "成員" }}</span>
+              <strong>{{ authState.user.email }}</strong>
+            </div>
+            <button type="button" aria-label="登出" title="登出" @click="handleLogout">
+              <LogOut aria-hidden="true" />
+            </button>
+          </div>
         </aside>
 
         <main class="workspace"><RouterView /></main>

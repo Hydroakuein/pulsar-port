@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import { initializeAuth, useAuth } from "../composables/useAuth";
 import ArtAssetsView from "../views/ArtAssetsView.vue";
 import GitRoadmapView from "../views/GitRoadmapView.vue";
 import HomeView from "../views/HomeView.vue";
+import LoginView from "../views/LoginView.vue";
 import LoreView from "../views/LoreView.vue";
 import SharedNotebookView from "../views/SharedNotebookView.vue";
 import TutorialResourcesView from "../views/TutorialResourcesView.vue";
@@ -15,6 +17,12 @@ const router = createRouter({
       name: "home",
       component: HomeView,
       meta: { title: "首頁" },
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginView,
+      meta: { title: "登入", public: true },
     },
     {
       path: "/art-assets",
@@ -49,6 +57,15 @@ const router = createRouter({
     { path: "/:pathMatch(.*)*", redirect: "/" },
   ],
   scrollBehavior: () => ({ top: 0 }),
+});
+
+router.beforeEach(async (to) => {
+  await initializeAuth();
+  const { isAuthenticated } = useAuth();
+
+  if (to.meta.public) return isAuthenticated.value ? { path: "/" } : true;
+  if (!isAuthenticated.value) return { path: "/login", query: { redirect: to.fullPath } };
+  return true;
 });
 
 export default router;

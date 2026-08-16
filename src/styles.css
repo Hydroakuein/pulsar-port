@@ -136,8 +136,14 @@ a:focus-visible {
   grid-template-columns: 248px minmax(0, 1fr);
 }
 
+.app-shell-auth {
+  display: block;
+}
+
 .sidebar {
   padding: 24px 14px;
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid var(--line);
   background: #e3e3e3;
 }
@@ -188,6 +194,58 @@ a:focus-visible {
   height: 20px;
   flex: 0 0 20px;
   stroke-width: 1.8;
+}
+
+.sidebar-account {
+  margin-top: auto;
+  padding: 14px 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.sidebar-account div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.sidebar-account span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.sidebar-account strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-account button {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.sidebar-account button:hover {
+  color: var(--ink);
+  background: var(--surface-muted);
+}
+
+.sidebar-account svg {
+  width: 17px;
 }
 
 .workspace {
